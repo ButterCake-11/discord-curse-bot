@@ -55,9 +55,7 @@ bot = commands.Bot(
     activity=discord.Activity(
         type=discord.ActivityType.watching,
         name="for curses... 🔮"
-    ),
-    sync_commands=True,  # Auto-sync slash commands
-    sync_commands_debug=True  # Debug sync issues
+    )
 )
 
 # =========================================================
