@@ -9,6 +9,7 @@ load_dotenv()
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 OWNER_ID = os.getenv("OWNER_ID")
+CLIENT_ID = os.getenv("CLIENT_ID")  # Required for external apps
 
 # =========================================================
 # VALIDATION
@@ -19,6 +20,11 @@ if not TOKEN:
     print("   Please add DISCORD_TOKEN to your .env file")
     print("   See .env.example for reference\n")
     sys.exit(1)
+
+if not CLIENT_ID:
+    print("\n⚠️  WARNING: CLIENT_ID is missing!")
+    print("   This is needed for External Apps")
+    print("   Add CLIENT_ID to your .env file\n")
 
 if not OWNER_ID:
     print("\n⚠️  WARNING: OWNER_ID is missing!")
@@ -31,7 +37,7 @@ else:
         sys.exit(1)
 
 # =========================================================
-# BOT SETUP
+# BOT SETUP - OPTIMIZED FOR EXTERNAL APPS
 # =========================================================
 
 intents = discord.Intents.default()
@@ -39,6 +45,8 @@ intents.message_content = True
 intents.members = True
 intents.guilds = True
 intents.direct_messages = True
+intents.dm_reactions = True
+intents.dm_typing = True
 
 bot = commands.Bot(
     command_prefix="!",
@@ -47,7 +55,9 @@ bot = commands.Bot(
     activity=discord.Activity(
         type=discord.ActivityType.watching,
         name="for curses... 🔮"
-    )
+    ),
+    sync_commands=True,  # Auto-sync slash commands
+    sync_commands_debug=True  # Debug sync issues
 )
 
 # =========================================================
@@ -57,19 +67,26 @@ bot = commands.Bot(
 @bot.event
 async def on_ready():
     """Bot ready event"""
-    print("\n" + "="*50)
+    print("\n" + "="*60)
     print(f"✅ Logged in as {bot.user}")
     print(f"🤖 Bot ID: {bot.user.id}")
     print(f"📊 Connected to {len(bot.guilds)} server(s)")
-    print("="*50)
+    
+    if CLIENT_ID:
+        print(f"🔗 Client ID: {CLIENT_ID}")
+        print(f"📱 Add as External App: https://discord.com/api/oauth2/authorize?client_id={CLIENT_ID}&scope=applications.commands+bot&permissions=274877906944")
+    
+    print("="*60)
     
     try:
         synced = await bot.tree.sync()
         print(f"✅ Synced {len(synced)} slash command(s)")
+        for cmd in synced:
+            print(f"   • /{cmd.name}")
     except Exception as e:
         print(f"❌ Sync error: {e}")
     
-    print("\n🟢 Bot is ready!\n")
+    print("\n🏠 Bot is ready!\n")
 
 @bot.event
 async def on_command_error(ctx, error):
