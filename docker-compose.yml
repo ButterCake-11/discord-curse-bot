@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  curse-bot:
+    build: .
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - OWNER_ID=${OWNER_ID}
+    restart: unless-stopped
+    volumes:
+      - ./custom_curses.json:/app/custom_curses.json

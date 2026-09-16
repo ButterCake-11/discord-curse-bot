@@ -1,0 +1,38 @@
+*.pyc
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.coverage
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+venv/
+env/
+ENV/
+.venv
+
+# Data files
+custom_curses.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-project
+.sublime-workspace
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+.pip-cache/
